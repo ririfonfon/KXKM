@@ -1,7 +1,7 @@
 /////////////////////////////////////////Adresse/////////////////////////////////////
 
 #define adr 1
-#define NUM_LEDS_PER_STRIP 12
+#define NUM_LEDS_PER_STRIP 13
 
 #define UNI 1
 //const int numberOfChannels = NUM_LEDS_PER_STRIP * 3; // Total number of channels you want to receive (1 led = 3 channels)
@@ -75,14 +75,6 @@ boolean ConnectWifi(void)
 
 void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* data)
 {
-  Serial.print("DMX: Univ: ");
-  Serial.print(universe, DEC);
-  Serial.print(", Seq: ");
-  Serial.print(sequence, DEC);
-  Serial.print(", Data (");
-  Serial.print(length, DEC);
-  Serial.print("): ");
-  Serial.println();
   if ((universe - startUniverse) < maxUniverses)
     universesReceived[universe - startUniverse] = 1;
     
