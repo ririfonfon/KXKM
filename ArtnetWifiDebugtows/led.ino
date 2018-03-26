@@ -56,7 +56,6 @@ void gpioSetup(int gpioNum, int gpioMode, int gpioVal) {
 
 
 void leds_init() {
-
   for (int k = 0; k < NUM_STRIPS; k++) {
     STRANDS[k] = {  .rmtChannel = k, .gpioNum = PINS[k], .ledType = LED_WS2812B_V3, .brightLimit = 32,
                     .numPixels = NUM_LEDS_PER_STRIP, .pixels = nullptr, ._stateVars = nullptr
@@ -84,5 +83,5 @@ void leds_init() {
 
 byte leds_square(byte value) {
   return (((value) * (value)) / 255);
-}
+}//byte leds_square
 
