@@ -1,3 +1,5 @@
+///////////////////////////////////////// debug /////////////////////////////////////
+#define DEBUG
 
 #define UNI 1
 
@@ -7,9 +9,9 @@ int resolution = 16;
 int ledChannela = 4;
 int ledChannelb = 5;
 int ledChannelc = 6;
-int ledPina = 0;
-int ledPinb = 2;
-int ledPinc = 15;
+int ledPina = 22;
+int ledPinb = 21;
+int ledPinc = 04;
 uint8_t ledArray[3] = {1, 2, 3}; // three led channels
 const boolean invert = true; // set true if common anode, false if common cathode
 
@@ -22,8 +24,8 @@ const boolean invert = true; // set true if common anode, false if common cathod
 #include <ArtnetWifi.h>
 
 //Wifi settings
-const char* ssid = "riri";
-const char* password = "288F42E7E8";
+const char* ssid = "kxkm-wifi";
+const char* password = "KOMPLEXKAPHARNAUM";
 
 WiFiUDP UdpSend;
 ArtnetWifi artnet;
@@ -50,6 +52,7 @@ boolean ConnectWifi(void)
     i++;
   }
   if (state) {
+    #ifdef DEBUG
     Serial.println("");
     Serial.print("Connected to ");
     Serial.println(ssid);
@@ -58,8 +61,8 @@ boolean ConnectWifi(void)
   } else {
     Serial.println("");
     Serial.println("Connection failed.");
+    #endif
   }
-
   return state;
 }
 void pwm_init() {
@@ -72,8 +75,8 @@ void pwm_init() {
   ledcSetup(ledChannelc, freq, resolution);
 }
 
-void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* data)
-{
+void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* data){
+  #ifdef DEBUG
   Serial.print("DMX: Univ: ");
   Serial.print(universe, DEC);
   Serial.print(", Seq: ");
@@ -82,6 +85,7 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* d
   Serial.print(length, DEC);
   Serial.print("): ");
   Serial.println();
+  #endif
   if (universe == UNI ) {
 ledcWrite(ledChannela, (data[1] * data[1]) * 1.007852);
 ledcWrite(ledChannelb, (data[2] * data[2]) * 1.007852);
@@ -90,10 +94,11 @@ ledcWrite(ledChannelc, (data[3] * data[3]) * 1.007852);
 }
 
 
-void setup()
-{
+void setup(){
+  #ifdef DEBUG
   // set-up serial for debug output
   Serial.begin(115200);
+  #endif
   pwm_init();
   ConnectWifi();
 

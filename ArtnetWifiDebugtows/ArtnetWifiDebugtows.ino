@@ -18,8 +18,8 @@ int previousDataLength = 0;
 #include <ArtnetWifi.h>
 
 ///////////////////////////////       Wifi settings      ///////////////////////////////
-const char* ssid = "riri";
-const char* password = "288F42E7E8";
+const char* ssid = "kxkm-wifi";
+const char* password = "KOMPLEXKAPHARNAUM";
 WiFiUDP UdpSend;
 ArtnetWifi artnet;
 
@@ -27,7 +27,7 @@ ArtnetWifi artnet;
 #include "esp32_digital_led_lib.h"
 #define min(m,n) ((m)<(n)?(m):(n))
 #define NUM_STRIPS 1
-int PINS[NUM_STRIPS] = {23};
+int PINS[NUM_STRIPS] = {22};
 const int numberOfChannels = NUM_STRIPS * NUM_LEDS_PER_STRIP * 3;
 const int numberOfLed = NUM_STRIPS * NUM_LEDS_PER_STRIP ;
 strand_t STRANDS[NUM_STRIPS];
