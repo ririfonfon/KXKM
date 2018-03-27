@@ -1,9 +1,11 @@
+///////////////////////////////////////// debug /////////////////////////////////////
+#define DEBUG
 
 #include <LXESP32DMX.h>
 #include "esp_task_wdt.h"
 
-#define DMX_DIRECTION_PIN 21
-#define DMX_SERIAL_OUTPUT_PIN 17
+#define DMX_DIRECTION_PIN 33
+#define DMX_SERIAL_OUTPUT_PIN 35
 
 uint8_t level;
 uint8_t dmxbuffer[DMX_MAX_FRAME];
@@ -24,8 +26,8 @@ uint8_t dmxbuffer[DMX_MAX_FRAME];
 #include <ArtnetWifi.h>
 
 //Wifi settings
-const char* ssid = "riri";
-const char* password = "288F42E7E8";
+const char* ssid = "kxkm-wifi";
+const char* password = "KOMPLEXKAPHARNAUM";
 
 WiFiUDP UdpSend;
 ArtnetWifi artnet;
@@ -37,14 +39,18 @@ boolean ConnectWifi(void)
   int i = 0;
 
   WiFi.begin(ssid, password);
+#ifdef DEBUG
   Serial.println("");
   Serial.println("Connecting to WiFi");
 
   // Wait for connection
   Serial.print("Connecting");
+#endif
   while (WiFi.status() != WL_CONNECTED) {
+#ifdef DEBUG
     delay(500);
     Serial.print(".");
+#endif
     if (i > 20) {
       state = false;
       break;
@@ -52,6 +58,7 @@ boolean ConnectWifi(void)
     i++;
   }
   if (state) {
+#ifdef DEBUG
     Serial.println("");
     Serial.print("Connected to ");
     Serial.println(ssid);
@@ -60,6 +67,7 @@ boolean ConnectWifi(void)
   } else {
     Serial.println("");
     Serial.println("Connection failed.");
+#endif
   }
 
   return state;
@@ -67,6 +75,7 @@ boolean ConnectWifi(void)
 
 void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* data)
 {
+#ifdef DEBUG
   Serial.print("DMX: Univ: ");
   Serial.print(universe, DEC);
   Serial.print(", Seq: ");
@@ -75,11 +84,14 @@ void onDmxFrame(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t* d
   Serial.print(length, DEC);
   Serial.print("): ");
   Serial.println();
+#endif
   if (universe == UNI ) {
     // send out the buffer
-    for (int i = 1; i < length + 1; i++)dmxbuffer[i] = (data[i] * data[i]) / 255;
+    for (int i = 1; i < length + 1; i++)dmxbuffer[i] = data[i] ;
     copyDMXToOutput();
+#ifdef DEBUG
     Serial.println("copyDMXToOutput()");
+#endif
   }
 }
 
@@ -94,13 +106,17 @@ void copyDMXToOutput(void) {
 void setup()
 {
   // set-up serial for debug output
+#ifdef DEBUG
   Serial.begin(115200);
+#endif
   pinMode(DMX_DIRECTION_PIN, OUTPUT);
   digitalWrite(DMX_DIRECTION_PIN, HIGH);
 
   pinMode(DMX_SERIAL_OUTPUT_PIN, OUTPUT);
   ESP32DMX.startOutput(DMX_SERIAL_OUTPUT_PIN);
+#ifdef DEBUG
   Serial.println("ESP32DMX setup complete");
+#endif
   ConnectWifi();
 
   // this will be called for each packet received
